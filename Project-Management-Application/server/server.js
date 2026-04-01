@@ -5,7 +5,10 @@ import { clerkMiddleware } from '@clerk/express'
 import { serve } from "inngest/express";
 import { inngest, functions } from "./inngest/index.js"
 
+
 const app = express();
+
+//app.post('/api/webhooks/clerk', express.raw({ type: 'application/json' }), clerkWebhooks);
 
 app.use(express.json());
 app.use(cors());
