@@ -8,7 +8,7 @@ export const getUserWorkspaces = async (req , res) => {
         const {userId} = await req.auth();
         const workspaces = await prisma.workspace.findMany({
             where: {
-                menbers: {some: {userId: userId}}
+                members: {some: {userId: userId}}
             },
             include: {
                 members: {include: {user: true}},
@@ -22,7 +22,7 @@ export const getUserWorkspaces = async (req , res) => {
                owner: true
             }
         })
-response.json({workspaces})
+res.json({workspaces})
 
     } catch (error) {
         console.log(error);
@@ -60,7 +60,7 @@ export const addMember = async (req , res) => {
             }
 
             //Check creator has admin role
-            if(!workspace.member.find((member)=>member.userId === userId && member.role === "ADMIN")){
+            if(!workspace.members.find((member)=>member.userId === userId && member.role === "ADMIN")){
                 return res.status(401).json({message: "You don't have admin privilages"})
             }
 

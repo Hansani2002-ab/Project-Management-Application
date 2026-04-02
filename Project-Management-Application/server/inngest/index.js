@@ -56,7 +56,7 @@ const syncWorkspaceCreation = inngest.createFunction(
                 name: data.name,
                 slug: data.slug,
                 ownerId: data.created_by,
-                imageUrl: data.image_url,
+                image_url: data.image_url,
             }
         });
 
