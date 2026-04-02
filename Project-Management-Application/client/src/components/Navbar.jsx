@@ -11,40 +11,56 @@ const Navbar = ({ setIsSidebarOpen }) => {
     const { theme } = useSelector(state => state.theme);
 
     return (
-        <div className="w-full bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 px-6 xl:px-16 py-3 flex-shrink-0">
-            <div className="flex items-center justify-between max-w-6xl mx-auto">
-                {/* Left section */}
+        // UI Update: Added backdrop-blur for a glassmorphism effect and refined the border colors
+        <div className="w-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200 dark:border-zinc-800 px-6 xl:px-16 py-2.5 flex-shrink-0">
+            <div className="flex items-center justify-between max-w-7xl mx-auto">
+                
+                {/* Left section: Search and Sidebar Trigger */}
                 <div className="flex items-center gap-4 min-w-0 flex-1">
-                    {/* Sidebar Trigger */}
-                    <button onClick={() => setIsSidebarOpen((prev) => !prev)} className="sm:hidden p-2 rounded-lg transition-colors text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800" >
+                    {/* Sidebar Trigger - Mobile Only */}
+                    <button 
+                        onClick={() => setIsSidebarOpen((prev) => !prev)} 
+                        className="sm:hidden p-2 rounded-xl transition-all text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 active:scale-95" 
+                    >
                         <PanelLeft size={20} />
                     </button>
 
-                    {/* Search Input */}
-                    <div className="relative flex-1 max-w-sm">
-                        <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-400 size-3.5" />
+                    {/* Modern Search Input: Added focus-ring-indigo and soft shadows */}
+                    <div className="relative flex-1 max-w-sm group">
+                        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 group-focus-within:text-indigo-500 transition-colors" size={16} />
                         <input
                             type="text"
                             placeholder="Search projects, tasks..."
-                            className="pl-8 pr-4 py-2 w-full bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-md text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+                            className="pl-10 pr-4 py-2 w-full bg-slate-100 dark:bg-zinc-800/50 border-none rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:ring-2 focus:ring-indigo-500/20 focus:bg-white dark:focus:bg-zinc-800 transition-all outline-none"
                         />
                     </div>
                 </div>
 
-                {/* Right section */}
-                <div className="flex items-center gap-3">
+                {/* Right section: Theme Toggle and Profile */}
+                <div className="flex items-center gap-4">
 
-                    {/* Theme Toggle */}
-                    <button onClick={() => dispatch(toggleTheme())} className="size-8 flex items-center justify-center bg-white dark:bg-zinc-800 shadow rounded-lg transition hover:scale-105 active:scale-95">
+                    {/* Theme Toggle: Updated to match modern aesthetics with smooth transitions */}
+                    <button 
+                        onClick={() => dispatch(toggleTheme())} 
+                        className="size-9 flex items-center justify-center bg-slate-100 dark:bg-zinc-800 rounded-xl transition-all hover:bg-slate-200 dark:hover:bg-zinc-700 active:scale-90 border border-slate-200/50 dark:border-zinc-700/50"
+                    >
                         {
                             theme === "light"
-                                ? (<MoonIcon className="size-4 text-gray-800 dark:text-gray-200" />)
-                                : (<SunIcon className="size-4 text-yellow-400" />)
+                                ? (<MoonIcon className="size-4.5 text-slate-700" />)
+                                : (<SunIcon className="size-4.5 text-yellow-500" />)
                         }
                     </button>
 
-                    {/* User Button */}
-                    <UserButton/>
+                    {/* User Button: Clerk's UI wraps into our modern theme */}
+                    <div className="pl-2 border-l border-slate-200 dark:border-zinc-800 h-6 flex items-center">
+                        <UserButton 
+                            appearance={{
+                                elements: {
+                                    userButtonAvatarBox: "size-8 rounded-xl border border-slate-200 dark:border-zinc-700"
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

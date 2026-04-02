@@ -80,7 +80,7 @@ const syncWorkspaceUpdation = inngest.createFunction(
             data: {
                 name: data.name,
                 slug: data.slug,
-                imageUrl: data.image_url,
+                image_url: data.image_url,
             }
         });
     }
@@ -88,7 +88,7 @@ const syncWorkspaceUpdation = inngest.createFunction(
 
 const syncWorkspaceDeletion = inngest.createFunction(
     { id: 'delete-workspace-from-clerk' }, 
-    { event: 'clerk/organization.deleted' }, // මෙතන event එක එකතු කළා
+    { event: 'clerk/organization.deleted' }, 
     async ({ event }) => {
         const { data } = event;
         await prisma.workspace.delete({
@@ -107,7 +107,7 @@ const syncWorkspaceMemberCreation = inngest.createFunction(
             data: {
                 userId: data.user_id,
                 workspaceId: data.organization_id,
-                // Role එක 'ADMIN' හෝ 'MEMBER' ලෙස map කිරීම
+                
                 role: data.role === 'org:admin' ? 'ADMIN' : 'MEMBER',
             }
         });
