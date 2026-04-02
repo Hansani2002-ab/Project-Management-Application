@@ -2,7 +2,6 @@ import { WorkspaceRole } from '@prisma/client';
 import prisma from '../configs/prisma.js';
 import { Inngest } from "inngest";
 
-
 export const inngest = new Inngest({ id: "project-management" });
 
 export const syncUserCreation = inngest.createFunction(
@@ -21,9 +20,6 @@ export const syncUserCreation = inngest.createFunction(
     }
 );
 
-/**
- * 2. User Deletion Sync
- */
 export const syncUserDeletion = inngest.createFunction(
     { id: 'delete-user-from-clerk' },
     { event: 'clerk/user.deleted' },
@@ -33,9 +29,6 @@ export const syncUserDeletion = inngest.createFunction(
     }
 );
 
-/**
- * 3. User Update Sync
- */
 export const syncUserUpdation = inngest.createFunction(
     { id: 'update-user-from-clerk' },
     { event: 'clerk/user.updated' },
@@ -51,13 +44,11 @@ export const syncUserUpdation = inngest.createFunction(
     }
 );
 
-
 const syncWorkspaceCreation = inngest.createFunction(
     { id: 'create-workspace-from-clerk' }, 
     { event: 'clerk/organization.created' },
     async ({ event }) => {
         const { data } = event;
-        
         
         await prisma.workspace.create({
             data: {
@@ -69,7 +60,6 @@ const syncWorkspaceCreation = inngest.createFunction(
             }
         });
 
-
         await prisma.workspaceMember.create({
             data: {
                 userId: data.created_by,
@@ -80,9 +70,6 @@ const syncWorkspaceCreation = inngest.createFunction(
     }
 );
 
-/**
- * 5. Workspace Update Sync
- */
 const syncWorkspaceUpdation = inngest.createFunction(
     { id: 'update-workspace-from-clerk' },
     { event: 'clerk/organization.updated' },
@@ -99,11 +86,9 @@ const syncWorkspaceUpdation = inngest.createFunction(
     }
 );
 
-/**
- * 6. Workspace Deletion Sync
- */
 const syncWorkspaceDeletion = inngest.createFunction(
     { id: 'delete-workspace-from-clerk' }, 
+    { event: 'clerk/organization.deleted' }, // මෙතන event එක එකතු කළා
     async ({ event }) => {
         const { data } = event;
         await prisma.workspace.delete({
@@ -112,9 +97,6 @@ const syncWorkspaceDeletion = inngest.createFunction(
     }
 );
 
-/**
- * 7. Workspace Member Sync (Invitation Accepted)
- */
 const syncWorkspaceMemberCreation = inngest.createFunction(
     { id: 'add-member-to-workspace-from-clerk' }, 
     { event: 'clerk/organizationInvitation.accepted' },
@@ -125,13 +107,12 @@ const syncWorkspaceMemberCreation = inngest.createFunction(
             data: {
                 userId: data.user_id,
                 workspaceId: data.organization_id,
-                
-                role: String(data.role_name).toUpperCase(),
+                // Role එක 'ADMIN' හෝ 'MEMBER' ලෙස map කිරීම
+                role: data.role === 'org:admin' ? 'ADMIN' : 'MEMBER',
             }
         });
     }
 );
-
 
 export const functions = [
     syncUserCreation,
