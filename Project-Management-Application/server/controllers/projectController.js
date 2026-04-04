@@ -74,7 +74,7 @@ export const createProject = async (req , res) => {
         
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error.code || error.messsge})
+        res.status(500).json({ message: error.code || error.message})
     }
 }
 
@@ -125,7 +125,7 @@ export const updateProject = async (req , res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error.code || error.messsge})
+        res.status(500).json({ message: error.code || error.message})
     }
 }
 
@@ -175,6 +175,6 @@ export const addMember = async (req , res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error.code || error.messsge})
+        res.status(500).json({ message: error.code || error.message})
     }
 }
