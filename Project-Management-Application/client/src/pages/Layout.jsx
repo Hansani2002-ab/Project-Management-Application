@@ -12,25 +12,26 @@ const Layout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const { loading, workspaces } = useSelector((state) => state.workspace)
     const dispatch = useDispatch()
-    const {user, isLoaded} = useUser()
-    const {getToken} = useAuth()
+    const { user, isLoaded } = useUser()
+    const { getToken } = useAuth()
 
-    // Initial load of theme
     useEffect(() => {
         dispatch(loadTheme())
-    }, [])
+    }, [dispatch])
 
-    // Initial load of workspaces
-    useEffect(()=> {
-        if(isLoaded && user && workspaces.length === 0) {
-            dispatch(fetchWorkspaces({getToken}))
+    // Workspace දත්ත ලබා ගැනීම - Clerk Organization වෙනස් වන විට මෙය ක්‍රියාත්මක වේ
+    useEffect(() => {
+        if (isLoaded && user) {
+            dispatch(fetchWorkspaces({ getToken }))
         }
-    },[user, isLoaded, user?.organizationMemberships])
+    }, [isLoaded, user, user?.organizationMemberships, dispatch, getToken])
 
-    if(!user){
+    if (!isLoaded) return null;
+
+    if (!user) {
         return (
             <div className='flex justify-center items-center h-screen bg-white'>
-                <SignIn/>
+                <SignIn />
             </div>
         )
     }
@@ -41,14 +42,15 @@ const Layout = () => {
         </div>
     )
 
-    if(user && workspaces.length === 0){
+    // Workspace එකක් නොමැති නම් පමණක් CreateOrganization පෙන්වන්න
+    if (workspaces.length === 0) {
         return (
             <div className='min-h-screen flex justify-center items-center'>
-                <CreateOrganization/>
-
+                <CreateOrganization afterCreateOrganizationUrl="/" />
             </div>
         )
     }
+
     return (
         <div className="flex bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100">
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
