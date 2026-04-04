@@ -1,4 +1,4 @@
-import { User } from "@clerk/express";
+
 import prisma from "../configs/prisma.js";
 
 
