@@ -29,7 +29,7 @@ export const addComment = async (req, res) => {
 
         const comment = await prisma.comment.create({
             data: {taskId, content, userId},
-            include: {User: true}
+            include: {user: true}
         })
 
         res.json({comment})
@@ -45,7 +45,7 @@ export const getTaskComments = async (req, res) =>{
    try {
       const { taskId } = req.params;
       const comments = await prisma.comment.findMany({
-        where: {taskId}, include: {User: true}
+        where: {taskId}, include: {user: true}
       })
 
      res.json({comments})
