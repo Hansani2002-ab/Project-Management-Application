@@ -19,11 +19,15 @@ const Layout = () => {
         dispatch(loadTheme())
     }, [dispatch])
 
-   
     useEffect(() => {
-        if (isLoaded && user) {
-            dispatch(fetchWorkspaces({ getToken }))
+        const getWorkspaces = async () => {
+            if (isLoaded && user) {
+                
+                dispatch(fetchWorkspaces({ getToken }))
+            }
         }
+        getWorkspaces()
+        
     }, [isLoaded, user, user?.organizationMemberships, dispatch, getToken])
 
     if (!isLoaded) return null;
@@ -46,7 +50,8 @@ const Layout = () => {
     if (!loading && workspaces.length === 0) {
         return (
             <div className='min-h-screen flex justify-center items-center'>
-                <CreateOrganization afterCreateOrganizationUrl="/" />
+                
+                <CreateOrganization afterCreateOrganizationUrl="/dashboard" />
             </div>
         )
     }
