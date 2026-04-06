@@ -19,7 +19,7 @@ const Layout = () => {
         dispatch(loadTheme())
     }, [dispatch])
 
-    // Workspace දත්ත ලබා ගැනීම - Clerk Organization වෙනස් වන විට මෙය ක්‍රියාත්මක වේ
+   
     useEffect(() => {
         if (isLoaded && user) {
             dispatch(fetchWorkspaces({ getToken }))
@@ -42,8 +42,8 @@ const Layout = () => {
         </div>
     )
 
-    // Workspace එකක් නොමැති නම් පමණක් CreateOrganization පෙන්වන්න
-    if (workspaces.length === 0) {
+    
+    if (!loading && workspaces.length === 0) {
         return (
             <div className='min-h-screen flex justify-center items-center'>
                 <CreateOrganization afterCreateOrganizationUrl="/" />

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import api from "../config/api";
+import api from "../configs/api";
 
 export const fetchWorkspaces = createAsyncThunk('workspace/fetchWorkspaces', async({getToken})=> {
     try {
@@ -108,7 +108,7 @@ const workspaceSlice = createSlice({
         });
         builder.addCase(fetchWorkspaces.fulfilled, (state, action)=>{
             state.loading = false;
-            // ඉතාමත් වැදගත්: API දත්ත workspaces array එකට ඇතුළත් කිරීම
+          
             state.workspaces = action.payload; 
             
             if(action.payload && action.payload.length > 0){

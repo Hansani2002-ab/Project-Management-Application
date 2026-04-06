@@ -31,6 +31,7 @@ export const createTask = async ( req, res) => {
                 priority,
                 assigneeId,
                 status,
+                type,
                 due_date: new Date(due_date) 
             }
         })
@@ -113,7 +114,7 @@ export const deleteTask = async ( req, res) => {
         }
        
         const project = await prisma.project.findUnique({
-            where: {id: tasks[0].projectId},
+            where: {id: task[0].projectId},
             include: {members: {include: {user: true}}}
         })
 
