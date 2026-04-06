@@ -27,7 +27,7 @@ function WorkspaceDropdown() {
         navigate('/');
     };
 
-    // පිටත click කළ විට dropdown එක වසා දැමීම
+    
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -38,9 +38,7 @@ function WorkspaceDropdown() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // ⚠️ කලින් තිබුණු infinite loop එක ඇති කරන useEffect එක මම ඉවත් කළා.
-    // මන්ද onSelectWorkspace මගින් දැනටමත් setActive සහ Redux update එක සිදුවේ.
-
+    
     if (!isLoaded) return <div className="m-4 text-xs text-gray-400">Loading workspaces...</div>;
 
     return (

@@ -7,33 +7,46 @@ export const getUserWorkspaces = async (req, res) => {
     try {
         const { userId } = req.auth;
 
-        const clerkMemberships = await clerkClient.users.getOrganizationMembershipList({ userId });
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized: No User ID found" });
+        }
 
-        for (const membership of clerkMemberships.data) {
-            const org = membership.organization;
+        
+        const response = await clerkClient.users.getOrganizationMembershipList({ userId });
+        
+        
+        const memberships = Array.isArray(response) ? response : response.data;
 
-            let workspace = await prisma.workspace.findUnique({
-                where: { id: org.id }
-            });
+        if (memberships && Array.isArray(memberships)) {
+            for (const membership of memberships) {
+                const org = membership.organization;
 
-            if (!workspace) {
-                await prisma.workspace.create({
-                    data: {
-                        id: org.id,
-                        name: org.name,
-                        slug: org.slug,
-                        ownerId: userId,
-                        members: {
-                            create: {
-                                userId: userId,
-                                role: "ADMIN"
+                
+                let workspace = await prisma.workspace.findUnique({
+                    where: { id: org.id }
+                });
+
+                
+                if (!workspace) {
+                    await prisma.workspace.create({
+                        data: {
+                            id: org.id,
+                            name: org.name,
+                            slug: org.slug,
+                            ownerId: userId,
+                            members: {
+                                create: {
+                                    userId: userId,
+                                    role: "ADMIN"
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 
+        
         const workspaces = await prisma.workspace.findMany({
             where: {
                 members: { some: { userId: userId } }
@@ -58,8 +71,8 @@ export const getUserWorkspaces = async (req, res) => {
         res.json({ workspaces });
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
+        console.error("Error in getUserWorkspaces:", error);
+        res.status(500).json({ message: error.message || "Internal Server Error" });
     }
 };
 
@@ -119,7 +132,7 @@ export const addMember = async (req, res) => {
         res.json({ member, message: "Member added successfully" });
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
+        console.error("Error in addMember:", error);
+        res.status(500).json({ message: error.message || "Internal Server Error" });
     }
 };
